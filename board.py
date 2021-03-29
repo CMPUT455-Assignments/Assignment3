@@ -374,10 +374,10 @@ class GoBoard(object):
     def uniform_random_simulation(self, move, color):
         board_copy = self.board.copy()
         board_copy.play_move(move, color)
-        while board_copy.detect_five_in_a_row() == board_util.EMPTY || len(board_copy.get_empty_points()) >= 1):
+        while board_copy.detect_five_in_a_row() == board_util.EMPTY or len(board_copy.get_empty_points()) >= 1:
             color = board_copy
             move = GoBoardUtil.generate_random_move(board_copy, color)
             board_copy.play_move(move, color)
-        if self.board.detect_five_in_a_row() == color
+        if self.board.detect_five_in_a_row() == color:
             return True
         return False

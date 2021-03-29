@@ -34,6 +34,7 @@ class GtpConnection:
         board: 
             Represents the current board state.
         """
+        self.policy = "RANDOM"
         self._debug_mode = debug_mode
         self.go_engine = go_engine
         self.board = board
@@ -57,7 +58,9 @@ class GtpConnection:
             "gogui-rules_side_to_move": self.gogui_rules_side_to_move_cmd,
             "gogui-rules_board": self.gogui_rules_board_cmd,
             "gogui-rules_final_result": self.gogui_rules_final_result_cmd,
-            "gogui-analyze_commands": self.gogui_analyze_cmd
+            "gogui-analyze_commands": self.gogui_analyze_cmd,
+            "policy": self.policy_cmd,
+            "policy_moves": self.policy_moves_cmd,
         }
 
         # used for argument checking
@@ -249,6 +252,26 @@ class GtpConnection:
             self.respond()
         except Exception as e:
             self.respond("illegal move: {}".format(str(e).replace('\'','')))
+
+    def
+
+    def policy_cmd(self, args):
+        if args[0] != "random" and args[0] != "rule_based":
+            self. respond("Illegal policy")
+        else:
+            self.policy = args[0]
+            self.respond("policy set to " + self.policy)
+
+    def policy_moves_cmd(self, args):
+        if self.board.detect_five_in_a_row() != EMPTY:
+            self.respond("")
+            return
+        move_list = self.board.get_empty_points()
+        if len(move_list) == 0:
+            self.respond("")
+            return
+        if self.policy == "rule_based":
+            move_list = self.go_engine.rule_based_moves(self.board, self.board.current_player)
     
     def genmove_cmd(self, args):
         """

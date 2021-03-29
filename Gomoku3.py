@@ -41,11 +41,33 @@ class Gomoku():
 
     def play_game(self, board, color):
         num_pass = 0
-        while (board.detect_five_in_a_row() == board_util.EMPTY || len(board.get_empty_points()) >= 1):
+        while board.detect_five_in_a_row() == board_util.EMPTY or len(board.get_empty_points()) >= 1:
             color = board.current_player
             move = GoBoardUtil.generate_random_move(board, color)
             board.play_move(move, color)
         return board.detect_five_in_a_row()
+
+    def rule_based_moves(self, board, color):
+        results = []
+        for move in board.get_empty_points():
+            moveScore = self.check_move(board, color, move)
+            results.append((moveScore, move))
+
+        results.sort(reverse = True, key = lambda x: x[0])
+
+        bestMoves = []
+        bestMoveScore = RANDOM
+        for move in results:
+            if move[0] > bestMoveScore:
+                bestMoveScore = move[0]
+            if move[0] < bestMoveScore:
+                break
+            bestMoves.append(move)
+        return bestMoves
+
+
+    def type_of_move(self, board, color, move):
+        pass
 
 
 def run():
