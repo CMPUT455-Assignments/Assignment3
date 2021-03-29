@@ -5,6 +5,7 @@
 from gtp_connection import GtpConnection
 from board_util import GoBoardUtil
 from board import GoBoard
+import numpy as np
 
 
 class Gomoku():
@@ -20,11 +21,31 @@ class Gomoku():
         version : float
             version number (used by the GTP interface).
         """
-        self.name = "GomokuAssignment2"
+        self.numSimulations = 10
+        self.name = "GomokuAssignment3"
         self.version = 1.0
 
     def get_move(self, board, color):
+        
         return GoBoardUtil.generate_random_move(board, color)
+    
+    def simulate(self, board, move, color):
+        num_wins = 0
+        color_opponent = GoBoardUtil.opponent(color)
+        for _ in range(self.numSimulations):
+            simulation_result = board.uniform_random_simulation(board, move, color)
+            if simulation_result == color:
+                num_wins += 1
+        return num_wins
+
+
+    def play_game(self, board, color):
+        num_pass = 0
+        while (board.detect_five_in_a_row() == board_util.EMPTY || len(board.get_empty_points()) >= 1):
+            color = board.current_player
+            move = GoBoardUtil.generate_random_move(board, color)
+            board.play_move(move, color)
+        return board.detect_five_in_a_row()
 
 
 def run():
